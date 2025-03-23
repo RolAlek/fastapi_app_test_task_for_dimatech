@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Computed, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.models import Base
+
+if TYPE_CHECKING:
+    from src.database.models import Account
 
 
 class User(Base):
@@ -14,3 +19,10 @@ class User(Base):
         Computed("first_name || ' ' || last_name", persisted=True),
     )
     is_admin: Mapped[bool] = mapped_column(default=False)
+
+    # relationships
+    accounts: Mapped[list["Account"]] = relationship(
+        backref="user",
+        lazy="selectin",
+        cascade="delete",
+    )
