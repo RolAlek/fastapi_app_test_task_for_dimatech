@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Computed, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.database._types import _updated_at
 from src.database.models import Base
 
 if TYPE_CHECKING:
@@ -19,6 +20,7 @@ class User(Base):
         Computed("first_name || ' ' || last_name", persisted=True),
     )
     is_admin: Mapped[bool] = mapped_column(default=False)
+    updated_at: Mapped[_updated_at]
 
     # relationships
     accounts: Mapped[list["Account"]] = relationship(
