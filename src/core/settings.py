@@ -27,6 +27,14 @@ class DatabaseSettings(BaseModel):
         return f"{self.driver}://{self.username}:{self.password}@{self.host}:{self.port}/{self.name}"
 
 
+class AuthSettings(BaseModel):
+    model_config = SettingsConfigDict(env_prefix="jwt")
+
+    secret_key: str
+    algorithm: str
+    token_expire_minutes: int
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
