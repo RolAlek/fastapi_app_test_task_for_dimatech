@@ -1,9 +1,20 @@
-from pydantic import BaseModel
+from functools import lru_cache
+from typing import Type, TypeVar
+
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+TSettings = TypeVar("TSettings", bound=BaseSettings)
 
-class AppSettings(BaseModel):
-    model_config = SettingsConfigDict(env_prefix="app")
+
+@lru_cache
+def get_settings(cls: Type[TSettings]) -> TSettings:
+    load_dotenv()
+    return cls()
+
+
+class AppSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="app_")
 
     title: str
     host: str
@@ -11,8 +22,8 @@ class AppSettings(BaseModel):
     reload: bool
 
 
-class DatabaseSettings(BaseModel):
-    model_config = SettingsConfigDict(env_prefix="database")
+class DatabaseSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="database_")
 
     driver: str
     host: str
@@ -27,21 +38,9 @@ class DatabaseSettings(BaseModel):
         return f"{self.driver}://{self.username}:{self.password}@{self.host}:{self.port}/{self.name}"
 
 
-class AuthSettings(BaseModel):
-    model_config = SettingsConfigDict(env_prefix="jwt")
+class AuthSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="jwt_")
 
     secret_key: str
     algorithm: str
     token_expire_minutes: int
-
-
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_nested_delimiter="__",
-        case_sensitive=False,
-        extra="allow",
-    )
-
-    app: AppSettings
-    database: DatabaseSettings

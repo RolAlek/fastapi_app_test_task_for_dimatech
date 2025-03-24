@@ -1,6 +1,3 @@
-__all__ = ("get_logger", "settings")
+__all__ = ("get_logger",)
 
 from .logger import get_logger
-from .settings import Settings
-
-settings = Settings()

@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Computed, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database._types import _updated_at
-from src.database.models import Base
+from src.infrastructure.database._types import _updated_at
+from src.infrastructure.database.models import Base
 
 if TYPE_CHECKING:
-    from src.database.models import Account
+    from infrastructure.database.models import Account
 
 
 class User(Base):

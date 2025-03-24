@@ -2,7 +2,8 @@ import uvicorn
 from alembic import command
 from alembic.config import Config
 
-from src.core import get_logger, settings
+from src.core import get_logger
+from src.core.settings import AppSettings, get_settings
 
 logger = get_logger(__name__)
 
@@ -13,10 +14,12 @@ if __name__ == "__main__":
     except Exception as error:
         logger.error(f"Failing to apply migrations: {error}", exc_info=True)
 
+    settings: AppSettings = get_settings(AppSettings)
+
     uvicorn.run(
         "src.app:create_app",
-        host=settings.app.host,
-        port=settings.app.port,
-        reload=settings.app.reload,
+        host=settings.host,
+        port=settings.port,
+        reload=settings.reload,
         factory=True,
     )

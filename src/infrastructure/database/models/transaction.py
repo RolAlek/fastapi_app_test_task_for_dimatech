@@ -1,7 +1,7 @@
 from sqlalchemy import CheckConstraint, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.database.models.base import Base
+from src.infrastructure.database.models.base import Base
 
 
 class Transaction(Base):
