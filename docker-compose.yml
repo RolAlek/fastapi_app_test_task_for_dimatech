@@ -6,9 +6,9 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_USER: ${DATABASE__USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE__PASSWORD}
-      POSTGRES_DB: ${DATABASE__NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     env_file:
       - ".env"
     ports:

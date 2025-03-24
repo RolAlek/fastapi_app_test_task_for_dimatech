@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from jose import jwt
 from passlib.context import CryptContext
 
-from core.settings import AuthSettings
+from src.core.settings import AuthSettings
 
 
 @dataclass

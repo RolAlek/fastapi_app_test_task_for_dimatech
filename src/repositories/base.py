@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
-from typing import TypeVar
+from typing import Generic, TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from services.dto import AbstractCreateDTO
-from src.database.models.base import Base
+from src.infrastructure.database.models import Base
+from src.services.dto import AbstractCreateDTO
 
 ModelType = TypeVar("ModelType", bound=Base)
-DataType = TypeVar("DataType", bound=AbstractCreateDTO)
+CreateDataType = TypeVar("CreateDataType", bound=AbstractCreateDTO)
 
 
 class AbstractRepository(ABC):
@@ -23,14 +23,18 @@ class AbstractRepository(ABC):
 
 
 @dataclass
-class BaseSQLAlchemyRepository(AbstractRepository):
+class BaseSQLAlchemyRepository(
+    Generic[ModelType, CreateDataType],
+    AbstractRepository,
+):
     session: AsyncSession
-    model: ModelType = None
+    model = None
 
-    async def add(self, data: DataType) -> ModelType:
+    async def add(self, data: CreateDataType) -> ModelType:
         instance = self.model(**asdict(data))
         self.session.add(instance)
         await self.session.flush()
+        await self.session.refresh(instance)
         return instance
 
     async def get_list(self) -> list[ModelType]:
