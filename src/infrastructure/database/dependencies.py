@@ -10,3 +10,8 @@ from src.infrastructure.database.engine import async_session_factory
 async def create_session() -> AsyncIterable[AsyncSession]:
     async with async_session_factory.begin() as session:
         yield session
+
+
+async def create_session_dependency() -> AsyncIterable[AsyncSession]:
+    async with async_session_factory.begin() as session:
+        yield session

@@ -40,5 +40,13 @@ class BaseSQLAlchemyRepository(
     async def get_list(self) -> list[ModelType]:
         return (await self.session.scalars(select(self.model))).all()
 
-    async def get_by_pk(self, pk: Any):
+    async def get_by_pk(self, pk: Any) -> ModelType | None:
         return await self.session.get(self.model, pk)
+
+    async def delete(self, obj: ModelType) -> None:
+        await self.session.delete(obj)
+
+    async def get_by_attr(self, attr_name: str, attr_value: Any) -> ModelType | None:
+        return await self.session.scalar(
+            select(self.model).where(getattr(self.model, attr_name) == attr_value)
+        )
