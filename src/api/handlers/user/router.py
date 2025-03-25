@@ -8,6 +8,7 @@ from result import Err
 from src.api.dependecies import current_superuser, current_user
 from src.api.handlers.user.schemas import (CreateUserRequestSchema,
                                            CreateUserResponseSchema,
+                                           ReadUserForAdminResponseSchema,
                                            ReadUserResponseSchema)
 from src.infrastructure.database.models.user import User
 from src.services.user import exceptions as user_exceptions
@@ -46,3 +47,25 @@ async def register_user(
 @inject
 async def get_me(user: User = Depends(current_user)):
     return user
+
+
+@router.get("/{user_id}", response_model=ReadUserForAdminResponseSchema)
+@inject
+async def get_user(
+    user_id: int,
+    service: Injected[UserService],
+    user: User = Depends(current_superuser),
+):
+    user = await service.get_user(user_id)
+
+    if isinstance(user, Err):
+        match user.err_value:
+            case user_exceptions.UserNotFoundException():
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"User with '{user_id}' not found.",
+                )
+            case _ as never:
+                assert_never(never)
+
+    return user.ok_value

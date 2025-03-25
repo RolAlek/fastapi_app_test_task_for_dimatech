@@ -9,6 +9,7 @@ from src.repositories.user import _UserRepository
 from src.services.authentication.service import _AuthenticationService
 from src.services.user.dto import UserCreateDTO
 from src.services.user.exceptions import (PermissionDeniedException,
+                                          UserNotFoundException,
                                           UserWithEmailAlreadyExistsException)
 
 
@@ -51,3 +52,14 @@ class UserService:
         )
 
         return Ok(access_token)
+
+    async def get_user(
+        self,
+        user_id: int,
+    ) -> Err[UserNotFoundException] | Ok[User]:
+        user = await self.user_repository.get_user_witch_accounts(user_id)
+
+        if user is None:
+            return Err(UserNotFoundException())
+
+        return Ok(user)

@@ -4,3 +4,7 @@ class UserWithEmailAlreadyExistsException(Exception):
 
 class PermissionDeniedException(Exception):
     pass
+
+
+class UserNotFoundException(Exception):
+    pass

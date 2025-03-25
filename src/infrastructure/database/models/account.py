@@ -25,5 +25,4 @@ class Account(Base):
     transactions: Mapped[list["Transaction"]] = relationship(
         backref="account",
         cascade="delete",
-        lazy="selectin",
     )

@@ -38,3 +38,21 @@ class ReadUserResponseSchema(BaseSchema):
     email: EmailStr
     full_name: str
     accounts: list = Field(default_factory=list)
+
+
+class AccountSchema(BaseSchema):
+    oid: int
+    balance: float
+    created_at: datetime
+    updated_at: datetime
+
+
+class ReadUserForAdminResponseSchema(BaseSchema):
+    oid: int
+    email: EmailStr
+    first_name: str
+    last_name: str
+    is_admin: bool
+    created_at: datetime
+    updated_at: datetime
+    accounts: list[AccountSchema] = Field(default_factory=list)
