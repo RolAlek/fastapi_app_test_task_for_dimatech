@@ -8,7 +8,7 @@ from src.services.user.dto import UserCreateDTO
 
 
 @dataclass
-class UserRepository(BaseSQLAlchemyRepository[User, UserCreateDTO]):
+class _UserRepository(BaseSQLAlchemyRepository[User, UserCreateDTO]):
     model = User
 
     async def get_user_by_email(self, email: str) -> User | None:

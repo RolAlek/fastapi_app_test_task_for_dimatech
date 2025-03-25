@@ -8,7 +8,7 @@ from src.core.settings import AuthSettings
 
 
 @dataclass
-class AuthenticationService:
+class _AuthenticationService:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
     settings: AuthSettings
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,3 +39,6 @@ class BaseSQLAlchemyRepository(
 
     async def get_list(self) -> list[ModelType]:
         return (await self.session.scalars(select(self.model))).all()
+
+    async def get_by_pk(self, pk: Any):
+        return await self.session.get(self.model, pk)
