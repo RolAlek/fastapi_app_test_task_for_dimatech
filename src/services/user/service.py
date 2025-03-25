@@ -18,7 +18,7 @@ class UserService:
     user_repository: _UserRepository
     auth_service: _AuthenticationService
 
-    async def register(
+    async def register_user(
         self,
         data: CreateUserRequestSchema,
     ) -> Err[UserWithEmailAlreadyExistsException] | Ok[User]:
@@ -63,3 +63,8 @@ class UserService:
             return Err(UserNotFoundException())
 
         return Ok(user)
+
+    async def get_all_users(self) -> Ok[list[User]]:
+        users = await self.user_repository.get_user_witch_accounts()
+
+        return Ok(users)

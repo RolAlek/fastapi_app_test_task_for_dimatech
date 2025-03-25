@@ -28,7 +28,7 @@ async def register_user(
     service: Injected[UserService],
     user: User = Depends(current_superuser),
 ):
-    user = await service.register(data)
+    user = await service.register_user(data)
 
     if isinstance(user, Err):
         match user.err_value:
@@ -41,6 +41,17 @@ async def register_user(
                 assert_never(never)
 
     return user.ok_value
+
+
+@router.get("/", response_model=list[ReadUserForAdminResponseSchema])
+@inject
+async def get_all_users(
+    service: Injected[UserService],
+    user: User = Depends(current_superuser),
+):
+    users = await service.get_all_users()
+
+    return users.ok_value
 
 
 @router.get("/me", response_model=ReadUserResponseSchema)
