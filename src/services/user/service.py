@@ -90,3 +90,13 @@ class UserService:
         updated_user = await self.user_repository.update(user, dto)
 
         return Ok(updated_user)
+
+    async def delete_user(self, user_id: int):
+        user = await self.user_repository.get_by_pk(user_id)
+
+        if user is None:
+            return Err(UserNotFoundException())
+
+        await self.user_repository.delete(user)
+
+        return Ok(user_id)

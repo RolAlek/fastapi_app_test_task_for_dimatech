@@ -104,3 +104,23 @@ async def update_user(
                 assert_never(never)
 
     return updated_user.ok_value
+
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@inject
+async def delete_user(
+    user_id: int,
+    service: Injected[UserService],
+    user: User = Depends(current_superuser),
+):
+    result = await service.delete_user(user_id)
+
+    if isinstance(result, Err):
+        match result.err_value:
+            case user_exceptions.UserNotFoundException():
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"User with '{user_id}' not found.",
+                )
+            case _ as never:
+                assert_never(never)
