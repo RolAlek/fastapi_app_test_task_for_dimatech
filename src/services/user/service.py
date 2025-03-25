@@ -3,11 +3,12 @@ from dataclasses import dataclass
 from result import Err, Ok
 
 from src.api.handlers.authentication.schemas import UserLoginRequestSchema
-from src.api.handlers.user.schemas import CreateUserRequestSchema
+from src.api.handlers.user.schemas import (CreateUserRequestSchema,
+                                           UpdateUserRequestSchema)
 from src.infrastructure.database.models import Token, User
 from src.repositories.user import _UserRepository
 from src.services.authentication.service import _AuthenticationService
-from src.services.user.dto import UserCreateDTO
+from src.services.user.dto import UserCreateDTO, UserUpdateDTO
 from src.services.user.exceptions import (PermissionDeniedException,
                                           UserNotFoundException,
                                           UserWithEmailAlreadyExistsException)
@@ -57,7 +58,7 @@ class UserService:
         self,
         user_id: int,
     ) -> Err[UserNotFoundException] | Ok[User]:
-        user = await self.user_repository.get_user_witch_accounts(user_id)
+        user: User | None = await self.user_repository.get_user_witch_accounts(user_id)
 
         if user is None:
             return Err(UserNotFoundException())
@@ -68,3 +69,24 @@ class UserService:
         users = await self.user_repository.get_user_witch_accounts()
 
         return Ok(users)
+
+    async def update_user(self, user_id: int, data: UpdateUserRequestSchema):
+        user = await self.user_repository.get_by_pk(user_id)
+
+        if user is None:
+            return Err(UserNotFoundException())
+
+        if data.password is not None:
+            data.password = self.auth_service.get_pwd_hash(password=data.password)
+
+        dto = UserUpdateDTO(
+            email=data.email,
+            hashed_password=data.password,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            is_admin=data.is_admin,
+        )
+
+        updated_user = await self.user_repository.update(user, dto)
+
+        return Ok(updated_user)

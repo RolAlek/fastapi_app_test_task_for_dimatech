@@ -1,8 +1,6 @@
-from datetime import datetime, timezone
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.settings import AuthSettings, get_settings
@@ -41,8 +39,18 @@ async def current_user(
             key=settings.secret_key,
             algorithms=[settings.algorithm],
         )
-    except JWTError:
-        pass
+
+    except ExpiredSignatureError as exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired.",
+        ) from exception
+
+    except JWTError as exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid access token.",
+        ) from exception
 
     expire = payload.get("exp")
     user_id = int(payload.get("sub"))
@@ -51,14 +59,6 @@ async def current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid access token.",
-        )
-
-    expire_time = datetime.fromtimestamp(int(expire), tz=timezone.utc)
-    if expire_time < datetime.now(timezone.utc):
-        await token_repo.delete(token)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired.",
         )
 
     return token.user

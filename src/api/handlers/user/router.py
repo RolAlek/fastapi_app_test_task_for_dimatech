@@ -5,11 +5,12 @@ from aioinject.ext.fastapi import inject
 from fastapi import APIRouter, Depends, HTTPException, status
 from result import Err
 
-from src.api.dependecies import current_superuser, current_user
+from src.api.dependencies import current_superuser, current_user
 from src.api.handlers.user.schemas import (CreateUserRequestSchema,
                                            CreateUserResponseSchema,
                                            ReadUserForAdminResponseSchema,
-                                           ReadUserResponseSchema)
+                                           ReadUserResponseSchema,
+                                           UpdateUserRequestSchema)
 from src.infrastructure.database.models.user import User
 from src.services.user import exceptions as user_exceptions
 from src.services.user.service import UserService
@@ -79,4 +80,27 @@ async def get_user(
             case _ as never:
                 assert_never(never)
 
-    return user.ok_value
+    return user
+
+
+@router.patch("/{user_id}", response_model=ReadUserForAdminResponseSchema)
+@inject
+async def update_user(
+    user_id: int,
+    data: UpdateUserRequestSchema,
+    service: Injected[UserService],
+    user: User = Depends(current_superuser),
+):
+    updated_user = await service.update_user(user_id, data)
+
+    if isinstance(updated_user, Err):
+        match updated_user.err_value:
+            case user_exceptions.UserNotFoundException():
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"User with '{user_id}' not found.",
+                )
+            case _ as never:
+                assert_never(never)
+
+    return updated_user.ok_value

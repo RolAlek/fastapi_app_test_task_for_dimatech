@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Self
+from typing import Optional, Self
 
 from pydantic import EmailStr, Field, model_validator
 
@@ -56,3 +56,11 @@ class ReadUserForAdminResponseSchema(BaseSchema):
     created_at: datetime
     updated_at: datetime
     accounts: list[AccountSchema] = Field(default_factory=list)
+
+
+class UpdateUserRequestSchema(BaseSchema):
+    email: Optional[EmailStr]
+    password: str = Field(None, min_length=6, max_length=32)
+    first_name: Optional[str] = Field(None, min_length=2, max_length=128)
+    last_name: Optional[str] = Field(None, min_length=2, max_length=128)
+    is_admin: Optional[bool] = None

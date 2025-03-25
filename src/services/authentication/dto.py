@@ -7,3 +7,8 @@ from src.services.dto import AbstractCreateDTO
 class CreateTokenDTO(AbstractCreateDTO):
     token: str
     user_id: int
+
+
+@dataclass
+class UpdateTokenDTO(AbstractCreateDTO):
+    token: str

@@ -8,7 +8,7 @@ from src.core.settings import AuthSettings
 from src.infrastructure.database.models.token import Token
 from src.repositories.token import _TokenRepository
 from src.repositories.user import _UserRepository
-from src.services.authentication.dto import CreateTokenDTO
+from src.services.authentication.dto import CreateTokenDTO, UpdateTokenDTO
 
 
 @dataclass
@@ -22,29 +22,33 @@ class _AuthenticationService:
         return self.pwd_context.hash(password)
 
     async def create_access_token(self, payload: dict[str, str]) -> Token:
-        token = await self.token_repository.get_by_attr("user_id", int(payload["sub"]))
-
-        if token:
-            return token
-
         expire = datetime.now(timezone.utc) + timedelta(
             minutes=self.settings.token_expire_minutes
         )
 
         payload.update({"exp": expire})
 
-        access_token = await self.token_repository.add(
+        access_token = token = jwt.encode(
+            claims=payload,
+            key=self.settings.secret_key,
+            algorithm=self.settings.algorithm,
+        )
+
+        token = await self.token_repository.get_by_attr("user_id", int(payload["sub"]))
+
+        if token:
+            token = await self.token_repository.update(
+                token, UpdateTokenDTO(token=access_token)
+            )
+
+        token = await self.token_repository.add(
             CreateTokenDTO(
-                token=jwt.encode(
-                    claims=payload,
-                    key=self.settings.secret_key,
-                    algorithm=self.settings.algorithm,
-                ),
+                token=access_token,
                 user_id=int(payload["sub"]),
             )
         )
 
-        return access_token
+        return token
 
     def verify_password(self, password: str, hashed_password: str) -> bool:
         return self.pwd_context.verify(password, hashed_password)
