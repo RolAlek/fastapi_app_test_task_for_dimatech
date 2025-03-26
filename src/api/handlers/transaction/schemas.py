@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from src.api.schemas import BaseSchema
 
 
@@ -12,8 +14,4 @@ class TransactionRequestSchema(BaseSchema):
 class TransactionResponseSchema(BaseSchema):
     oid: str
     amount: float
-
-
-class AccountResponseSchema(BaseSchema):
-    oid: int
-    balance: float
+    created_at: datetime

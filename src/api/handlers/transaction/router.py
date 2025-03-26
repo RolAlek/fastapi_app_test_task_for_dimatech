@@ -6,10 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from result import Err
 
 from src.api.dependencies import current_user
-from src.api.handlers.transaction.schemas import (AccountResponseSchema,
-                                                  TransactionRequestSchema)
+from src.api.handlers.transaction.schemas import (TransactionRequestSchema,
+                                                  TransactionResponseSchema)
 from src.infrastructure.database.models.user import User
-from src.services.modules.account.service import AccountService
 from src.services.modules.transaction import \
     exceptions as transaction_exceptions
 from src.services.modules.transaction.service import TransactionService
@@ -47,10 +46,10 @@ async def accept_transaction(
                 assert_never(never)
 
 
-@router.get("/accounts/me", response_model=list[AccountResponseSchema])
+@router.get("/", response_model=list[TransactionResponseSchema])
 @inject
-async def get_my_accounts(
-    service: Injected[AccountService],
+async def get_my_transactions(
+    service: Injected[TransactionService],
     user: User = Depends(current_user),
 ):
-    return await service.get_all_accounts_for_user(user.oid)
+    return await service.get_user_transactions(user.oid)

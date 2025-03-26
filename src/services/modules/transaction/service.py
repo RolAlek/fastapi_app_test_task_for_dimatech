@@ -64,6 +64,9 @@ class TransactionService:
         transaction = await self.transaction_repository.add(transaction_dto)
         return Ok(transaction)
 
+    async def get_user_transactions(self, user_oid: int) -> list[Transaction]:
+        return await self.transaction_repository.get_all_for_user(user_oid)
+
     def _check_signature(self, data: TransactionRequestSchema) -> bool:
         signature_string = f"{data.account_id}{data.amount}{data.transaction_id}{data.user_id}{self.settings.secret_key}"
         cltd_signature = hashlib.sha256(signature_string.encode()).hexdigest()
