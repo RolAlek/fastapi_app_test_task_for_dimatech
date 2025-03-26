@@ -17,7 +17,10 @@ class Account(Base):
     updated_at: Mapped[_updated_at]
 
     # relationships
-    transactions: Mapped[list["Transaction"]] = relationship(backref="account")
+    transactions: Mapped[list["Transaction"]] = relationship(
+        backref="account",
+        lazy="selectin",
+    )
 
     @hybrid_property
     def balance(self) -> float:

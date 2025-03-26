@@ -6,6 +6,13 @@ from pydantic import EmailStr, Field, model_validator
 from src.api.schemas import BaseSchema
 
 
+class AccountSchema(BaseSchema):
+    oid: int
+    balance: float
+    created_at: datetime
+    updated_at: datetime
+
+
 class CreateUserRequestSchema(BaseSchema):
     email: EmailStr
     password: str = Field(..., min_length=6, max_length=32)
@@ -37,14 +44,6 @@ class ReadUserResponseSchema(BaseSchema):
     oid: int
     email: EmailStr
     full_name: str
-    accounts: list = Field(default_factory=list)
-
-
-class AccountSchema(BaseSchema):
-    oid: int
-    balance: float
-    created_at: datetime
-    updated_at: datetime
 
 
 class ReadUserForAdminResponseSchema(BaseSchema):

@@ -8,7 +8,8 @@ from src.core.settings import AuthSettings
 from src.infrastructure.database.models.token import Token
 from src.repositories.token import _TokenRepository
 from src.repositories.user import _UserRepository
-from src.services.modules.authentication.dto import CreateTokenDTO, UpdateTokenDTO
+from src.services.modules.authentication.dto import (CreateTokenDTO,
+                                                     UpdateTokenDTO)
 
 
 @dataclass
@@ -37,18 +38,17 @@ class _AuthenticationService:
         token = await self.token_repository.get_by_attr("user_id", int(payload["sub"]))
 
         if token:
-            token = await self.token_repository.update(
-                token, UpdateTokenDTO(token=access_token)
+            return await self.token_repository.update(
+                token,
+                UpdateTokenDTO(token=access_token),
             )
 
-        token = await self.token_repository.add(
+        return await self.token_repository.add(
             CreateTokenDTO(
                 token=access_token,
                 user_id=int(payload["sub"]),
             )
         )
-
-        return token
 
     def verify_password(self, password: str, hashed_password: str) -> bool:
         return self.pwd_context.verify(password, hashed_password)

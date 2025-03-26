@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, Sequence, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
@@ -39,8 +39,14 @@ class BaseSQLAlchemyRepository(
         await self.session.refresh(instance)
         return instance
 
-    async def get_list(self) -> list[ModelType]:
-        return (await self.session.scalars(select(self.model))).all()
+    async def get_list(self, **kwargs) -> Sequence[ModelType]:
+        stmt = select(self.model)
+
+        if kwargs:
+            for key, value in kwargs.items():
+                stmt = stmt.where(getattr(self.model, key) == value)
+
+        return (await self.session.scalars(stmt)).all()
 
     async def get_by_pk(self, pk: Any) -> ModelType | None:
         return await self.session.get(self.model, pk)

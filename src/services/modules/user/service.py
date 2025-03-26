@@ -9,9 +9,9 @@ from src.infrastructure.database.models import Token, User
 from src.repositories.user import _UserRepository
 from src.services.modules.authentication.service import _AuthenticationService
 from src.services.modules.user.dto import UserCreateDTO, UserUpdateDTO
-from src.services.modules.user.exceptions import (PermissionDeniedException,
-                                          UserNotFoundException,
-                                          UserWithEmailAlreadyExistsException)
+from src.services.modules.user.exceptions import (
+    PermissionDeniedException, UserNotFoundException,
+    UserWithEmailAlreadyExistsException)
 
 
 @dataclass

@@ -7,3 +7,13 @@ class TransactionRequestSchema(BaseSchema):
     user_id: int
     amount: float
     signature: str
+
+
+class TransactionResponseSchema(BaseSchema):
+    oid: str
+    amount: float
+
+
+class AccountResponseSchema(BaseSchema):
+    oid: int
+    balance: float

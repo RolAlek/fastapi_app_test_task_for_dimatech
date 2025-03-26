@@ -57,8 +57,9 @@ async def get_all_users(
 
 @router.get("/me", response_model=ReadUserResponseSchema)
 @inject
-async def get_me(user: User = Depends(current_user)):
-    return user
+async def get_me(service: Injected[UserService], user: User = Depends(current_user)):
+    user_with_accs = await service.get_user(user.oid)
+    return user_with_accs.ok_value
 
 
 @router.get("/{user_id}", response_model=ReadUserForAdminResponseSchema)
