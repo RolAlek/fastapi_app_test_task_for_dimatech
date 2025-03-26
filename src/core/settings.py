@@ -44,3 +44,9 @@ class AuthSettings(BaseSettings):
     secret_key: str
     algorithm: str
     token_expire_minutes: int
+
+
+class TransactionSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="transaction_")
+
+    secret_key: str

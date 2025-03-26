@@ -7,13 +7,21 @@ from pydantic_settings import BaseSettings
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.settings import (AppSettings, AuthSettings, DatabaseSettings,
-                               get_settings)
+                               TransactionSettings, get_settings)
 from src.infrastructure.database.dependencies import create_session
-from src.infrastructure.di.modules import authentication, user
+from src.infrastructure.di.modules import (ACCOUNT_PROVIDERS,
+                                           AUTHENTICATION_PROVIDERS,
+                                           TRANSACTION_PROVIDERS,
+                                           USER_PROVIDERS)
 
-MODULES = [authentication.PROVIDERS, user.PROVIDERS]
+MODULES = [
+    ACCOUNT_PROVIDERS,
+    AUTHENTICATION_PROVIDERS,
+    TRANSACTION_PROVIDERS,
+    USER_PROVIDERS,
+]
 
-SETTINGS = [AppSettings, AuthSettings, DatabaseSettings]
+SETTINGS = [AppSettings, AuthSettings, DatabaseSettings, TransactionSettings]
 
 
 def _init_settings(
