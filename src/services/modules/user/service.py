@@ -7,9 +7,9 @@ from src.api.handlers.user.schemas import (CreateUserRequestSchema,
                                            UpdateUserRequestSchema)
 from src.infrastructure.database.models import Token, User
 from src.repositories.user import _UserRepository
-from src.services.authentication.service import _AuthenticationService
-from src.services.user.dto import UserCreateDTO, UserUpdateDTO
-from src.services.user.exceptions import (PermissionDeniedException,
+from src.services.modules.authentication.service import _AuthenticationService
+from src.services.modules.user.dto import UserCreateDTO, UserUpdateDTO
+from src.services.modules.user.exceptions import (PermissionDeniedException,
                                           UserNotFoundException,
                                           UserWithEmailAlreadyExistsException)
 

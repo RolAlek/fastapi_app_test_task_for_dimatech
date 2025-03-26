@@ -53,13 +53,13 @@ class TransactionService:
         )
 
         if account is None:
-            dto = CreateAccountDTO(oid=data.account_id, user_id=user.oid)
+            dto = CreateAccountDTO(oid=data.account_id, user_oid=user.oid)
             account = await self.account_service.add_account(dto)
 
         transaction_dto = CreateTransactionDto(
             oid=data.transaction_id,
             amount=data.amount,
-            account_id=account.oid,
+            account_oid=account.oid,
         )
         transaction = await self.transaction_repository.add(transaction_dto)
         return Ok(transaction)

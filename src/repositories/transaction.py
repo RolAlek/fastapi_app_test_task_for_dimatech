@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from sqlalchemy import select
+from sqlalchemy import exists, select
 
 from src.infrastructure.database.models import Transaction
 from src.repositories.base import BaseSQLAlchemyRepository
-from src.services.transaction.dto import CreateTransactionDto
+from src.services.modules.transaction.dto import CreateTransactionDto
 
 
 @dataclass
@@ -15,5 +15,5 @@ class _TransactionRepository(
 
     async def check_exists(self, oid: str):
         return await self.session.scalar(
-            select(self.model).where(self.model.oid == oid).exists()
+            select(exists(self.model.oid)).where(self.model.oid == oid)
         )

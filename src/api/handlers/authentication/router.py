@@ -7,8 +7,8 @@ from result import Err
 
 from src.api.handlers.authentication.schemas import (UserLoginRequestSchema,
                                                      UserLoginResponseSchema)
-from src.services.user import exceptions as user_exceptions
-from src.services.user.service import UserService
+from src.services.modules.user import exceptions as user_exceptions
+from src.services.modules.user.service import UserService
 
 router = APIRouter()
 

@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 
 from src.infrastructure.database.models.user import User
 from src.repositories.base import BaseSQLAlchemyRepository
-from src.services.user.dto import UserCreateDTO
+from src.services.modules.user.dto import UserCreateDTO
 
 
 @dataclass

@@ -7,4 +7,4 @@ from src.services.dto import AbstractCreateDTO
 class CreateTransactionDto(AbstractCreateDTO):
     oid: str
     amount: float
-    account_id: int
+    account_oid: int

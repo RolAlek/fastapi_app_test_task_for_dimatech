@@ -8,7 +8,7 @@ from src.core.settings import AuthSettings
 from src.infrastructure.database.models.token import Token
 from src.repositories.token import _TokenRepository
 from src.repositories.user import _UserRepository
-from src.services.authentication.dto import CreateTokenDTO, UpdateTokenDTO
+from src.services.modules.authentication.dto import CreateTokenDTO, UpdateTokenDTO
 
 
 @dataclass

@@ -12,8 +12,8 @@ from src.api.handlers.user.schemas import (CreateUserRequestSchema,
                                            ReadUserResponseSchema,
                                            UpdateUserRequestSchema)
 from src.infrastructure.database.models.user import User
-from src.services.user import exceptions as user_exceptions
-from src.services.user.service import UserService
+from src.services.modules.user import exceptions as user_exceptions
+from src.services.modules.user.service import UserService
 
 router = APIRouter()
 

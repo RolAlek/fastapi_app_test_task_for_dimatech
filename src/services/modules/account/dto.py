@@ -6,4 +6,4 @@ from src.services.dto import AbstractCreateDTO
 @dataclass
 class CreateAccountDTO(AbstractCreateDTO):
     oid: int
-    user_id: int
+    user_oid: int
