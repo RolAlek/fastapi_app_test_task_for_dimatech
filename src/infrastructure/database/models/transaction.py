@@ -12,7 +12,7 @@ class Transaction(Base):
         ),
     )
 
-    oid: Mapped[str] = mapped_column(primary_key=True)
+    oid: Mapped[str] = mapped_column(primary_key=True, index=True, unique=True)
     amount: Mapped[float]
 
     # realationships
