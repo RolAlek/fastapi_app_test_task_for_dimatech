@@ -13,5 +13,5 @@ class AccountService:
     async def add_account(self, dto: CreateAccountDTO) -> Account:
         return await self.account_repository.add(dto)
 
-    async def get_all_accounts_for_user(self, user_oid: int) -> Sequence[Account]:
+    async def get_user_accounts(self, user_oid: int) -> Sequence[Account]:
         return await self.account_repository.get_list(user_oid=user_oid)
