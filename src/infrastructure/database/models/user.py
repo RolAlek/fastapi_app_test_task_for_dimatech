@@ -25,5 +25,6 @@ class User(Base):
     # relationships
     accounts: Mapped[list["Account"]] = relationship(
         backref="user",
+        cascade="delete",
         lazy="selectin",
     )

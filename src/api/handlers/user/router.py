@@ -81,7 +81,7 @@ async def get_user(
             case _ as never:
                 assert_never(never)
 
-    return user
+    return user.ok_value
 
 
 @router.patch("/{user_id}", response_model=ReadUserForAdminResponseSchema)
